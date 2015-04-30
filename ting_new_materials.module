@@ -128,7 +128,8 @@ function ting_new_materials_make_limit_query($limit = 0) {
     // The format "sort.acquisitionDate=(201403* OR 201402*) used here is due to
     // limitations in the data well. It simply don't support look up things
     // between two dates.
-    $query = ' AND sort.acquisitionDate=(' . $date->format('Ym') . '*';
+    // sort.acquisitionDate replaced with term.acquisitionDate. Works for us. agms
+    $query = ' AND term.acquisitionDate=(' . $date->format('Ym') . '*';
     for ($i = 1; $i <= $limit; $i++) {
       $date->sub(DateInterval::createFromDateString('1 month'));
       $query .= ' OR ' . $date->format('Ym') . '*';
