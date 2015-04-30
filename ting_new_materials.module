@@ -96,6 +96,13 @@ function ting_new_materials_build_search_query($entity, $limit_query = TRUE) {
   $wrapper = entity_metadata_wrapper('node', $entity);
   $query = $wrapper->field_ting_new_materials_search->value();
 
+  //add alma search option
+  $alma_query = $wrapper->field_ddelibra_search->value();
+
+  if ($alma_query) {
+    $query = ting_new_materials_search_alma_query($alma_query);
+  }
+
   // Check if limit expression should be added.
   if ($limit_query) {
     // Get the limit (number of months 1 to 12).
@@ -173,4 +180,13 @@ function ting_new_materials_do_search($query, $page = 0, $num_per_page = 10) {
   }
 
   return $search_result;
+}
+
+function ting_new_materials_search_alma_query($alma_query_string, $number_of_results) {
+  $results = alma_search_search($alma_query_string, 1, $number_of_results);
+  $data_well_query = '';
+  if (isset($results) && isset($results['alma_ids'])) {
+    $data_well_query = join(' OR ', $results['alma_ids']);
+  }
+  return $data_well_query;
 }
